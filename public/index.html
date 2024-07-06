@@ -1,0 +1,98 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+        }
+    
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+    
+        #recipeForm {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    
+        #recipeForm input[type="text"],
+        #recipeForm input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Makes sure padding doesn't affect the total width */
+        }
+    
+        #recipeForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        #recipeForm button:hover {
+            background-color: #4cae4c;
+        }
+    
+        #recipeOutput, #shoppingListOutput {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Recipe App</h1>
+    <form id="recipeForm">
+        <input type="text" id="name" placeholder="Recipe Name" required><br>
+        <input type="text" id="calories" placeholder="Calories" required><br>
+        <input type="text" id="time" placeholder="Time (minutes)" required><br>
+        <input type="text" explination="time" placeholder="explination" required><br>
+        <button type="submit">Get Recipe</button>
+    </form>
+    <div id="recipeOutput"></div>
+    <div id="shoppingListOutput"></div>
+
+    <script>
+        document.getElementById('recipeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const calories = document.getElementById('calories').value;
+            const time = document.getElementById('time').value;
+            const explination = document.getElementById('explination').value;
+
+            const response = await fetch('/get-recipe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, calories, time, explination }),
+            });
+
+            const data = await response.json();
+            document.getElementById('recipeOutput').innerText = `Recipe: ${data.recipe}`;
+            document.getElementById('shoppingListOutput').innerText = `Shopping List: ${data.shoppingList}`;
+        });
+    </script>
+</body>
+</html>
